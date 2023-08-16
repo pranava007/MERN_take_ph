@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Take Photo</title>
+</head>
+<body>
+    <h1>Take a Photo</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="captureButton">Capture</button>
+    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+    <img id="capturedImage" src="" style="display: none;" alt="Captured Image">
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const capturedImage = document.getElementById('capturedImage');
+        const captureButton = document.getElementById('captureButton');
+
+        // Access the user's camera and stream the video
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing the camera:', err);
+            }
+        }
+
+        // Capture a photo from the video stream
+        function capturePhoto() {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            capturedImage.src = canvas.toDataURL('image/png'); // Convert canvas to base64 image data
+            capturedImage.style.display = 'block';
+        }
+
+        // Initialize camera when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initCamera();
+        });
+
+        // Capture photo when the button is clicked
+        captureButton.addEventListener('click', () => {
+            capturePhoto();
+        });
+    </script>
+</body>
+</html>
